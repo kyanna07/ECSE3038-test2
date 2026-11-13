@@ -7,7 +7,7 @@
 #include <DHT.h>
 
 #if __has_include("secrets.h")
-#include "secrets.h"       // DEVICE_KEY (never committed)
+#include "secrets.h"       
 #endif
 #ifndef DEVICE_KEY
 #define DEVICE_KEY ""
@@ -48,7 +48,7 @@ unsigned long lastPostMs = 0;
 unsigned long lastSenseMs = 0;
 unsigned long lastRetryMs = 0;
 
-// ---------- B4 + B5: drive the fan LED, publish only on change ----------
+// B4 and B5: drive the fan LED, publish only on change 
 void updateFan() {
   bool want = false;
   if (haveSettings) {
@@ -69,7 +69,7 @@ void updateFan() {
   fanOn = want;
 }
 
-// ---------- B3: read fan/settings, refuse anything invalid ----------
+// B3: read fan/settings, refuse anything invalid
 void onMessage(char *topic, byte *payload, unsigned int length) {
   if (String(topic) != settingsTopic) return;
 
@@ -100,7 +100,7 @@ void onMessage(char *topic, byte *payload, unsigned int length) {
   updateFan();   // react straight away, not at the next reading
 }
 
-// ---------- B2: broker with a last will ----------
+// B2: broker with a last will message, subscribe to settings
 void connectMqtt() {
   String clientId = "test2-" + String(MQTT_NAME) + "-" + String((uint32_t)esp_random(), HEX);
   Serial.print("Connecting to the broker... ");
@@ -129,7 +129,7 @@ void connectWiFi() {
   Serial.println(WiFi.macAddress());
 }
 
-// ---------- B1: POST the humidity ----------
+// B1: POST the humidity reading to the server, if valid and connected 
 void postReading() {
   if (isnan(humidity) || WiFi.status() != WL_CONNECTED) return;
   HTTPClient http;
@@ -168,7 +168,7 @@ void setup() {
   mqtt.setCallback(onMessage);
   connectMqtt();
 
-  delay(2000);          // the DHT22 needs a moment after power-up
+  delay(2000);          // the DHT22 needs a few seconds to warm up
   readSensor();
   postReading();
   lastPostMs = lastSenseMs = millis();
