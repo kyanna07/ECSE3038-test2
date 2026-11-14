@@ -4,6 +4,8 @@ Kyanna Knight
 
 ![The board in Wokwi: ESP32, DHT22 sensor and the fan LED](docs/board.png)
 
+**Pins:** DHT22 data on GPIO 15, fan LED on GPIO 2 (see `board/diagram.json`).
+
 An ESP32 (in Wokwi) with a DHT22 humidity sensor and an LED that stands for a bathroom extractor fan.
 The board posts its humidity to a FastAPI + MongoDB Atlas API every 10 seconds. The fan's mode
 (`auto`, `on`, `off`) and humidity limit are set on the API, which pushes them to the board over MQTT.
