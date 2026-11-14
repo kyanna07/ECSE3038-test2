@@ -40,6 +40,15 @@ uvicorn app:app --host 127.0.0.1 --port 8000
 nginx forwards port 80 to port 8000, so the API is at `http://<vm-name>/docs`.
 When finished: Ctrl+C, then `sudo systemctl start iot-api`.
 
+## WIRING
+
+| Part | ESP32 pin |
+|---|---|
+| DHT22 data (SDA) | GPIO 15 |
+| Fan LED (through a 220 Ω resistor) | GPIO 2 |
+
+The pins are set in `board/src/main.cpp` (`DHT_PIN`, `FAN_PIN`) and match `board/diagram.json`.
+
 ## HOW TO RUN THE BOARD (WOKWI)
 
 1. Open the `board` folder in VS Code with PlatformIO and the Wokwi extension installed.
