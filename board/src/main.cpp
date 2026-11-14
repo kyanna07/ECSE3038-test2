@@ -168,7 +168,7 @@ void setup() {
 
   mqtt.setServer(BROKER_HOST, BROKER_PORT);
   mqtt.setCallback(onMessage);
-  mqtt.setKeepAlive(60);        // a slow HTTP POST must not make the broker drop us
+  mqtt.setKeepAlive(20);        // a slow HTTP POST must not make the broker drop us
   mqtt.setSocketTimeout(10);
   connectMqtt();
 

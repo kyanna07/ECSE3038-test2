@@ -50,8 +50,12 @@ When finished: Ctrl+C, then `sudo systemctl start iot-api`.
 
 ## MQTT TOPICS
 
-Class broker `135.232.203.144:1883`):
+Class broker `135.232.203.144:1883`:
 
 - `ecse3038/<name>/fan/settings` – written by the API, retained, JSON
 - `ecse3038/<name>/fan/state` – written by the board, retained, `on` / `off`
 - `ecse3038/<name>/status` – `online` from the board, `offline` as its last will, retained
+
+The topics live on the class MQTT page (subscribed to `ecse3038/kyanna/#`): the fan switching on and off as the humidity crosses 65 %, and the status going `offline` / `online` as the board reconnects.
+
+![MQTT topics on the class broker](docs/mqtt-topics.png)
