@@ -108,7 +108,6 @@ void connectMqtt() {
     Serial.println("connected");
     mqtt.publish(statusTopic.c_str(), "online", true);
     mqtt.subscribe(settingsTopic.c_str());
-    statePublished = false;   // publish the current fan state once after (re)connecting
     updateFan();
   } else {
     Serial.print("failed, state ");
@@ -132,7 +131,9 @@ void connectWiFi() {
 // B1: POST the humidity reading to the server, if valid and connected 
 void postReading() {
   if (isnan(humidity) || WiFi.status() != WL_CONNECTED) return;
+  mqtt.loop();
   HTTPClient http;
+  http.setTimeout(5000);
   http.begin(API_URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-API-Key", DEVICE_KEY);
@@ -140,6 +141,7 @@ void postReading() {
   int status = http.POST(body);
   Serial.printf("POST /readings %s -> %d\n", body.c_str(), status);
   http.end();
+  mqtt.loop();
 }
 
 void readSensor() {
@@ -166,6 +168,8 @@ void setup() {
 
   mqtt.setServer(BROKER_HOST, BROKER_PORT);
   mqtt.setCallback(onMessage);
+  mqtt.setKeepAlive(60);        // a slow HTTP POST must not make the broker drop us
+  mqtt.setSocketTimeout(10);
   connectMqtt();
 
   delay(2000);          // the DHT22 needs a few seconds to warm up

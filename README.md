@@ -1,10 +1,14 @@
-# ECSE3038 Test 2: The bathroom fan
+# ECSE3038 TEST 2: THE BATHROOM FAN
+
+Kyanna Knight
+
+![The board in Wokwi: ESP32, DHT22 sensor and the fan LED](docs/board.png)
 
 An ESP32 (in Wokwi) with a DHT22 humidity sensor and an LED that stands for a bathroom extractor fan.
 The board posts its humidity to a FastAPI + MongoDB Atlas API every 10 seconds. The fan's mode
 (`auto`, `on`, `off`) and humidity limit are set on the API, which pushes them to the board over MQTT.
 
-## Repository layout
+## REPOSITORY LAYOUT
 
 - `api/` – the FastAPI app (`app.py`, `requirements.txt`). Its `.env` is never committed.
 - `board/` – the PlatformIO project for the ESP32. `include/secrets.h` is never committed.
@@ -20,7 +24,7 @@ The board posts its humidity to a FastAPI + MongoDB Atlas API every 10 seconds. 
 | `PUT /fans/{mac}/settings` | `{"mode", "max_humidity"}`; stores them (201 new, 200 replaced) and publishes them retained on `ecse3038/<name>/fan/settings` |
 | `DELETE /fans/{mac}` | Needs that fan's key in `X-API-Key` (204 / 401 / 403 / 404) |
 
-## How to run the API (on the VM)
+## HOW TO RUN THE API (ON THE VM)
 
 ```bash
 sudo systemctl stop iot-api
@@ -36,7 +40,7 @@ uvicorn app:app --host 127.0.0.1 --port 8000
 nginx forwards port 80 to port 8000, so the API is at `http://<vm-name>/docs`.
 When finished: Ctrl+C, then `sudo systemctl start iot-api`.
 
-## How to run the board (Wokwi)
+## HOW TO RUN THE BOARD (WOKWI)
 
 1. Open the `board` folder in VS Code with PlatformIO and the Wokwi extension installed.
 2. Create `include/secrets.h` containing `#define DEVICE_KEY ""`.
@@ -44,7 +48,9 @@ When finished: Ctrl+C, then `sudo systemctl start iot-api`.
 4. `POST /fans` with that MAC, put the returned key between the quotes in `include/secrets.h`, rebuild and restart.
 5. `PUT /fans/<mac>/settings` with `{"mode": "auto", "max_humidity": 65}`, then drag the DHT22's humidity above 65: the LED turns on.
 
-MQTT topics (class broker `135.232.203.144:1883`):
+## MQTT TOPICS
+
+Class broker `135.232.203.144:1883`):
 
 - `ecse3038/<name>/fan/settings` – written by the API, retained, JSON
 - `ecse3038/<name>/fan/state` – written by the board, retained, `on` / `off`
